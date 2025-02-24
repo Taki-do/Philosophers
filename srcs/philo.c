@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:53:00 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/02/24 15:22:14 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/02/24 16:01:54 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ int	check_philo(t_philo *philo, int ac)
 				, 52), -1);
 	if (philo->nb_philo == 1)
 		return (one_philo(), -1);
+	if (philo->nb_philo > 200)
+		return (write(2, "Error: [number_of_philosophers] is above 200\n"
+				, 45), -1);
 	if (philo->time_to_die < 0)
 		return (write(2, "Error: [time_to_die] is a negative value\n", 41), -1);
 	if (philo->time_to_eat < 0)
@@ -59,5 +62,7 @@ int	main(int ac, char *av[])
 		init_philo(ac, av, &philo);
 		if (check_philo(&philo, ac) == -1)
 			return (1);
+		create_threads(&philo);
+		//if odd or even
 	}
 }

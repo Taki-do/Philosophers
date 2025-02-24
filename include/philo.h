@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:30:24 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/02/24 15:00:40 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/02/24 15:59:25 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ typedef struct s_philo
 
 
 // utils.c
-int ft_atoi(char *str);
+int     ft_atoi(char *str);
+
+void	create_threads(t_philo *philo);
 
 #endif
