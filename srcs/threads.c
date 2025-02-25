@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:36:00 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/02/24 16:14:59 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/02/25 15:39:28 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,22 @@ void	*routine(void *nb)
 	printf("Thread %ld\n", (long)nb);
 	pthread_mutex_unlock(&mutex);
 	return (NULL);
+}
+
+void	create_forks(t_philo *philo)
+{
+	int	i;
+
+	i = 0;
+	philo->fork = (pthread_mutex_t *)malloc(philo->nb_philo
+					* sizeof(pthread_mutex_t));
+	if (!philo->fork)
+		return ;
+	while (i < philo->nb_philo)
+	{
+		pthread_mutex_init(&philo->fork[i], NULL);
+		i++;
+	}
 }
 
 void	create_threads(t_philo *philo)
