@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:53:00 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/03/13 11:25:02 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/03/15 15:15:20 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,9 @@ int	main(int ac, char *av[])
 
 	if (ac == 5 || ac == 6)
 	{
+		data.is_dead = 0;
+		pthread_mutex_init(&data.meal_check, NULL);
+		data.start_time = get_time_in_ms();
 		init_philo(ac, av, &data);
 		if (check_philo(&data, ac) == -1)
 			return (1);
