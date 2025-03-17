@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:36:00 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/03/15 15:27:47 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/03/17 12:03:01 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	*routine(void *arg)
 {
+	long long		start;
 	t_philosopher	*philo;
 
 	philo = (t_philosopher *)arg;
@@ -28,27 +29,44 @@ void	*routine(void *arg)
 		pthread_mutex_unlock(&philo->data->meal_check);
 		if (philo->id % 2) //impair
 		{
-			pthread_mutex_lock(philo->left_fork);
-			printf("%lld %d has taken a fork\n", (get_time_in_ms() - philo->data->start_time), philo->id);
 			pthread_mutex_lock(philo->right_fork);
+			pthread_mutex_lock(&philo->data->fork_check);
 			printf("%lld %d has taken a fork\n", (get_time_in_ms() - philo->data->start_time), philo->id);
+			pthread_mutex_unlock(&philo->data->fork_check);
+			pthread_mutex_lock(philo->left_fork);
+			pthread_mutex_lock(&philo->data->fork_check);
+			printf("%lld %d has taken a fork\n", (get_time_in_ms() - philo->data->start_time), philo->id);
+			pthread_mutex_unlock(&philo->data->fork_check);
 		}
 		else //pair
 		{
-			pthread_mutex_lock(philo->right_fork);
-			printf("%lld %d has taken a fork\n", (get_time_in_ms() - philo->data->start_time), philo->id);
 			pthread_mutex_lock(philo->left_fork);
+			pthread_mutex_lock(&philo->data->fork_check);
 			printf("%lld %d has taken a fork\n", (get_time_in_ms() - philo->data->start_time), philo->id);
+			pthread_mutex_unlock(&philo->data->fork_check);
+			pthread_mutex_lock(philo->right_fork);
+			pthread_mutex_lock(&philo->data->fork_check);
+			printf("%lld %d has taken a fork\n", (get_time_in_ms() - philo->data->start_time), philo->id);
+			pthread_mutex_unlock(&philo->data->fork_check);
 		}
 		philo->time_meal = get_time_in_ms();
+		pthread_mutex_lock(&philo->data->eat_check);
 		printf("%lld %d is eating\n", (get_time_in_ms() - philo->data->start_time), philo->id);
-		usleep(philo->data->time_to_eat * 1000);
+		philo->nb_eat++;
+		pthread_mutex_unlock(&philo->data->eat_check);
+		start = get_time_in_ms();
+		while (get_time_in_ms() - start < philo->data->time_to_eat)
+			usleep(500);
 
 		pthread_mutex_unlock(philo->left_fork);
 		pthread_mutex_unlock(philo->right_fork);
 		
+		pthread_mutex_lock(&philo->data->sleep_check);
 		printf("%lld %d is sleeping\n", (get_time_in_ms() - philo->data->start_time), philo->id);
-		usleep(philo->data->time_to_sleep * 1000);
+		pthread_mutex_unlock(&philo->data->sleep_check);
+		start = get_time_in_ms();
+		while (get_time_in_ms() - start < philo->data->time_to_sleep)
+			usleep(500);
 
 		printf("%lld %d is thinking\n", (get_time_in_ms() - philo->data->start_time), philo->id);
 	}
@@ -81,19 +99,20 @@ void	*check_meal(void *arg)
 	data = (t_data *)arg;
 	while (1)
 	{
-		i = 0;
-		while (i < data->nb_philo)
+		i = -1;
+		while (++i < data->nb_philo)
 		{
 			current_time = get_time_in_ms();
 			if (current_time - data->philos[i].time_meal > data->time_to_die)
 			{
-				printf("%lld %d died\n", current_time - data->start_time, i);
 				pthread_mutex_lock(&data->meal_check);
+				printf("%lld %d died\n", current_time - data->start_time, i);
 				data->is_dead = 1;
 				pthread_mutex_unlock(&data->meal_check);
 				return (NULL);
 			}
-			i++;
+			if (data->nb_meals != -1 && (data->philos[i].nb_eat >= data->nb_meals))
+				return (NULL);
 		}
 		usleep(1000);
 	}
@@ -114,19 +133,20 @@ void	create_threads(t_data *data)
 	while (i < data->nb_philo)
 	{
 		data->philos[i].id = i;
+		data->philos[i].nb_eat = 0;
 		data->philos[i].left_fork = &data->fork[i];
-		data->philos[i].right_fork = &data->fork[(i + 1) % data->nb_philo]; //reverifier la logique
+		data->philos[i].right_fork = &data->fork[(i + 1) % data->nb_philo];
 		data->philos[i].data = data;
 		i++;
 	}
 	i = 0;
+	data->start_time = get_time_in_ms();
 	while (i < data->nb_philo)
 	{
 		data->philos[i].time_meal = get_time_in_ms();
 		i++;
 	}
 	pthread_create(&check_death, NULL, check_meal, data);
-	pthread_detach(check_death);
 	i = 0;
 	while (i < data->nb_philo)
 	{
@@ -134,10 +154,19 @@ void	create_threads(t_data *data)
 		i++;
 	}
 	i = 0;
+	pthread_join(check_death, NULL);
 	while (i < data->nb_philo)
 	{
-		pthread_join(data->philos[i].thread, NULL);
+		pthread_detach(data->philos[i].thread);
 		i++;
 	}
+	free(data->philos);
+	i = 0;
+	while (i < data->nb_philo)
+	{
+		pthread_mutex_destroy(&data->fork[i]);
+		i++;
+	}
+	free(data->fork);
 	pthread_mutex_destroy(&data->meal_check);
 }

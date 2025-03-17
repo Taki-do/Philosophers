@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:53:00 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/03/15 15:15:20 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/03/17 12:01:09 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	one_philo(t_data *data)
 {
+	//pas bon ?
 	usleep(data->time_to_die * 1000);
 	printf("%d 1 died\n", data->time_to_die);
 }
@@ -61,12 +62,16 @@ int	main(int ac, char *av[])
 	if (ac == 5 || ac == 6)
 	{
 		data.is_dead = 0;
+		if (ac != 6)
+			data.nb_meals = -1;
 		pthread_mutex_init(&data.meal_check, NULL);
-		data.start_time = get_time_in_ms();
+		pthread_mutex_init(&data.fork_check, NULL);
+		pthread_mutex_init(&data.eat_check, NULL);
+		pthread_mutex_init(&data.sleep_check, NULL);
 		init_philo(ac, av, &data);
 		if (check_philo(&data, ac) == -1)
 			return (1);
 		create_threads(&data);
-		//if odd or even
+		
 	}
 }
