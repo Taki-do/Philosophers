@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:53:00 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/03/17 12:01:09 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/03/18 11:39:40 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ int	main(int ac, char *av[])
 		pthread_mutex_init(&data.fork_check, NULL);
 		pthread_mutex_init(&data.eat_check, NULL);
 		pthread_mutex_init(&data.sleep_check, NULL);
+		pthread_mutex_init(&data.printf_check, NULL);
 		init_philo(ac, av, &data);
 		if (check_philo(&data, ac) == -1)
 			return (1);
