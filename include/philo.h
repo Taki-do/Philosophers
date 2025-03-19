@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:30:24 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/03/18 11:39:26 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/03/19 14:28:13 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,6 @@ typedef struct	s_data
 	int				nb_meals;
 	int				is_dead;
 	pthread_mutex_t	meal_check;
-	pthread_mutex_t	fork_check;
-	pthread_mutex_t	eat_check;
-	pthread_mutex_t	sleep_check;
 	pthread_mutex_t	printf_check;
 	long long int	start_time;
 	pthread_mutex_t	*fork; //tableau de fork
