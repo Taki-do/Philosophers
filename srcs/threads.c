@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:36:00 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/03/30 12:16:14 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/03/30 16:49:04 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ void	create_forks(t_data *data)
 void	*check_meal(void *arg)
 {
 	int			i;
+	int			nb_philo;
 	t_data		*data;
 	long long	current_time;
 
@@ -130,14 +131,20 @@ void	*check_meal(void *arg)
 		i = -1;
 		while (++i < data->nb_philo)
 		{
-			pthread_mutex_lock(&data->meal_check);
 			current_time = get_time_in_ms();
 			if (current_time - data->philos[i].time_meal > data->time_to_die)
 			{
+				pthread_mutex_lock(&data->meal_check);
 				data->is_dead = 1;
 				pthread_mutex_unlock(&data->meal_check);
+				
+				nb_philo = i;
+				i = -1;
+				while (++i < data->nb_philo)
+					pthread_join(data->philos[i].thread, NULL);
+					
 				pthread_mutex_lock(&data->printf_check);
-				printf("%lld %d died\n", current_time - data->start_time, i);
+				printf("%lld %d died\n", current_time - data->start_time, nb_philo);
 				pthread_mutex_unlock(&data->printf_check);
 				return (NULL);
 			}
@@ -184,16 +191,8 @@ void	create_threads(t_data *data)
 		pthread_create(&data->philos[i].thread, NULL, routine, &data->philos[i]);
 		i++;
 	}
-	i = -1;
-	while (++i < data->nb_philo)
-		pthread_join(data->philos[i].thread, NULL);
+	
 	pthread_join(check_death, NULL);
-	i = 0;
-	while (i < data->nb_philo)
-	{
-		pthread_detach(data->philos[i].thread);
-		i++;
-	}
 	free(data->philos);
 	i = 0;
 	while (i < data->nb_philo)
