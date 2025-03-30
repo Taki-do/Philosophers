@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:53:00 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/03/19 14:28:17 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/03/30 12:15:19 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,5 @@ int	main(int ac, char *av[])
 		if (check_philo(&data, ac) == -1)
 			return (1);
 		create_threads(&data);
-		
 	}
 }
