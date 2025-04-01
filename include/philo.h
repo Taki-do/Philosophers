@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:30:24 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/04/01 13:15:16 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/04/01 20:25:59 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ typedef struct s_data
 	pthread_mutex_t	meal_check;
 	pthread_mutex_t	printf_check;
 	long long int	start_time;
-	pthread_mutex_t	*fork; //tableau de fork
-	t_philosopher	*philos; //tout les philosophes
+	pthread_mutex_t	fork[200]; //tableau de fork
+	t_philosopher	philos[200]; //tout les philosophes
 }	t_data;
 
 int				ft_atoi(char *str);

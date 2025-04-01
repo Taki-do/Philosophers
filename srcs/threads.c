@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:36:00 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/04/01 13:12:50 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/04/01 20:24:41 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,6 @@ void	create_forks(t_data *data)
 	int	i;
 
 	i = 0;
-	data->fork = (pthread_mutex_t *)malloc(data->nb_philo
-			* sizeof(pthread_mutex_t));
-	if (!data->fork)
-		return ;
 	while (i < data->nb_philo)
 	{
 		pthread_mutex_init(&data->fork[i], NULL);
@@ -80,23 +76,17 @@ void	create_threads(t_data *data)
 	int			i;
 	pthread_t	check_death;
 
-	data->philos = (t_philosopher *)malloc(data->nb_philo
-			* sizeof(t_philosopher));
-	if (!data->philos)
-		return ;
 	create_forks(data);
 	init_philos(data);
 	data->start_time = get_time_in_ms();
 	launch_threads(data, &check_death);
 	pthread_join(check_death, NULL);
-	free(data->philos);
 	i = 0;
 	while (i < data->nb_philo)
 	{
 		pthread_mutex_destroy(&data->fork[i]);
 		i++;
 	}
-	free(data->fork);
 	pthread_mutex_destroy(&data->printf_check);
 	pthread_mutex_destroy(&data->meal_check);
 }
