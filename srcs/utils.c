@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:54:58 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/02/24 14:58:14 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/04/01 12:21:25 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,31 @@ int	ft_atoi(char *str)
 		i++;
 	}
 	return (res * sign);
+}
+
+int	even_odd(t_philosopher *philo, int num)
+{
+	if (num % 2)
+	{
+		pthread_mutex_lock(philo->right_fork);
+		if (check_death(philo, 0, 1))
+			return (1);
+		taken_fork(philo);
+		pthread_mutex_lock(philo->left_fork);
+		if (check_death(philo, 1, 1))
+			return (1);
+		taken_fork(philo);
+	}
+	else
+	{
+		pthread_mutex_lock(philo->left_fork);
+		if (check_death(philo, 1, 0))
+			return (1);
+		taken_fork(philo);
+		pthread_mutex_lock(philo->right_fork);
+		if (check_death(philo, 1, 1))
+			return (1);
+		taken_fork(philo);
+	}
+	return (0);
 }

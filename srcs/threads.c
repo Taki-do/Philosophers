@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:36:00 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/04/01 12:06:49 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/04/01 12:22:08 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,52 +22,11 @@ void	*routine(void *arg)
 	{
 		if (check_death(philo, 0, 0))
 			break ;
-		if (philo->id % 2)
-		{
-			pthread_mutex_lock(philo->right_fork);
-
-			if (check_death(philo, 0, 1))
-				break ;
-			
-			pthread_mutex_lock(&philo->data->printf_check);
-			printf("%lld %d has taken a fork\n", (get_time_in_ms() - philo->data->start_time), philo->id + 1);
-			pthread_mutex_unlock(&philo->data->printf_check);
-			pthread_mutex_lock(philo->left_fork);
-			
-			if (check_death(philo, 1, 1))
-				break ;
-			
-			pthread_mutex_lock(&philo->data->printf_check);
-			printf("%lld %d has taken a fork\n", (get_time_in_ms() - philo->data->start_time), philo->id + 1);
-			pthread_mutex_unlock(&philo->data->printf_check);
-		}
-		else //pair
-		{
-			pthread_mutex_lock(philo->left_fork);
-			
-			if (check_death(philo, 1, 0))
-				break ;
-			
-			pthread_mutex_lock(&philo->data->printf_check);
-			printf("%lld %d has taken a fork\n", (get_time_in_ms() - philo->data->start_time), philo->id + 1);
-			pthread_mutex_unlock(&philo->data->printf_check);
-			pthread_mutex_lock(philo->right_fork);
-			
-			if (check_death(philo, 1, 1))
-				break ;
-			
-			pthread_mutex_lock(&philo->data->printf_check);
-			printf("%lld %d has taken a fork\n", (get_time_in_ms() - philo->data->start_time), philo->id + 1);
-			pthread_mutex_unlock(&philo->data->printf_check);
-		}
-
+		if (even_odd(philo, philo->id))
+			break ;
 		if (check_death(philo, 1, 1))
 			break ;
-		
-		pthread_mutex_lock(&philo->data->printf_check);
-		printf("%lld %d is eating\n", (get_time_in_ms() - philo->data->start_time), philo->id + 1);
-		pthread_mutex_unlock(&philo->data->printf_check);
-		
+		eating(philo);
 		pthread_mutex_lock(&philo->data->meal_check);
 		philo->time_meal = get_time_in_ms();
 		pthread_mutex_unlock(&philo->data->meal_check);
@@ -98,19 +57,13 @@ void	*routine(void *arg)
 		pthread_mutex_unlock(philo->right_fork);
 		if (check_death(philo, 0, 0))
 			break ;
-		pthread_mutex_lock(&philo->data->printf_check);
-		printf("%lld %d is sleeping\n", (get_time_in_ms() - philo->data->start_time), philo->id + 1);
-		pthread_mutex_unlock(&philo->data->printf_check);
-		
+		sleeping(philo);
 		start = get_time_in_ms();
 		while (get_time_in_ms() - start < philo->data->time_to_sleep)
 			usleep(500);
 		if (check_death(philo, 0, 0))
 			break ;
-
-		pthread_mutex_lock(&philo->data->printf_check);
-		printf("%lld %d is thinking\n", (get_time_in_ms() - philo->data->start_time), philo->id + 1);
-		pthread_mutex_unlock(&philo->data->printf_check);
+		thinking(philo);
 	}
 	return (NULL);
 }
