@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:30:24 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/03/31 14:52:21 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/04/01 12:03:15 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct	s_data
 
 // utils.c
 int     		ft_atoi(char *str);
+int				check_death(t_philosopher *philo, int left, int right);
 
 void			create_threads(t_data *data);
 
