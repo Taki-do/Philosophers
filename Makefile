@@ -1,5 +1,5 @@
 NAME = philo
-SRC = srcs/philo.c srcs/utils.c srcs/threads.c srcs/habits.c srcs/threads_alt.c
+SRC = srcs/philo.c srcs/utils.c srcs/threads.c srcs/habits.c srcs/threads_alt.c srcs/check_meal.c
 SRC_BONUS = 
 OBJ = $(SRC:.c=.o)
 OBJ_BONUS = $(SRC_BONUS:.c=.o)

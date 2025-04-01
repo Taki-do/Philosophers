@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:54:58 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/04/01 12:44:06 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/04/01 13:14:00 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	ft_atoi(char *str)
 {
-	int i;
-	int res;
+	int	i;
+	int	res;
 	int	sign;
 
 	i = 0;
@@ -42,27 +42,28 @@ int	even_odd(t_philosopher *philo, int num)
 	if (num % 2)
 	{
 		pthread_mutex_lock(philo->right_fork);
-		if (check_death(philo, 0, 1))
+		if (check_death_routine(philo, 0, 1))
 			return (1);
 		taken_fork(philo);
 		pthread_mutex_lock(philo->left_fork);
-		if (check_death(philo, 1, 1))
+		if (check_death_routine(philo, 1, 1))
 			return (1);
 		taken_fork(philo);
 	}
 	else
 	{
 		pthread_mutex_lock(philo->left_fork);
-		if (check_death(philo, 1, 0))
+		if (check_death_routine(philo, 1, 0))
 			return (1);
 		taken_fork(philo);
 		pthread_mutex_lock(philo->right_fork);
-		if (check_death(philo, 1, 1))
+		if (check_death_routine(philo, 1, 1))
 			return (1);
 		taken_fork(philo);
 	}
 	return (0);
 }
+
 int	check_philo_full(t_philosopher *philo)
 {
 	pthread_mutex_lock(&philo->data->meal_check);
@@ -78,6 +79,7 @@ int	check_philo_full(t_philosopher *philo)
 	pthread_mutex_unlock(&philo->data->meal_check);
 	return (0);
 }
+
 void	better_usleep(t_philosopher *philo, int eat_or_sleep)
 {
 	long long		start;
@@ -102,11 +104,11 @@ int	philo_living(t_philosopher *philo)
 	better_usleep(philo, 0);
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
-	if (check_death(philo, 0, 0))
+	if (check_death_routine(philo, 0, 0))
 		return (1);
 	sleeping(philo);
 	better_usleep(philo, 1);
-	if (check_death(philo, 0, 0))
+	if (check_death_routine(philo, 0, 0))
 		return (1);
 	thinking(philo);
 	return (0);

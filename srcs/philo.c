@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:53:00 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/03/31 17:16:06 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/04/01 13:11:44 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	one_philo(t_data *data)
 {
-	//pas bon ?
 	printf("%d 1 has taken a fork\n", 0);
 	usleep(data->time_to_die * 1000);
 	printf("%d 1 died\n", data->time_to_die);
@@ -36,12 +35,12 @@ int	check_philo(t_data *data, int ac)
 		return (write(2, "Error: [time_to_eat] is a negative value\n", 41), -1);
 	if (data->time_to_sleep < 0)
 		return (write(2, "Error: [time_to_sleep] is a negative value\n", 43)
-				, -1);
+			, -1);
 	if (ac == 6)
 	{
 		if (data->nb_meals < 0)
 			return (write(2, "Error: [number_of_times_each_philosophers", 41),
-			write(2, "_must_eat] is a negative value\n", 31), -1);
+				write(2, "_must_eat] is a negative value\n", 31), -1);
 	}
 	return (0);
 }

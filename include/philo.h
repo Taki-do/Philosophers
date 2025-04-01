@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:30:24 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/04/01 12:44:23 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/04/01 13:15:16 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <sys/time.h>
 # include <pthread.h>
 
-typedef struct	s_philosopher
+typedef struct s_philosopher
 {
 	int				id;
 	int				nb_eat;
@@ -30,7 +30,7 @@ typedef struct	s_philosopher
 	long long int	time_meal;
 }	t_philosopher;
 
-typedef struct	s_data
+typedef struct s_data
 {
 	int				nb_philo;
 	int				time_to_die;
@@ -46,19 +46,24 @@ typedef struct	s_data
 	t_philosopher	*philos; //tout les philosophes
 }	t_data;
 
-// utils.c
 int				ft_atoi(char *str);
 int				philo_living(t_philosopher *philo);
-int				even_odd(t_philosopher *philo, int num);
 int				check_philo_full(t_philosopher *philo);
-int				check_death(t_philosopher *philo, int left, int right);
+int				even_odd(t_philosopher *philo, int num);
+int				check_death_routine(t_philosopher *philo, int left, int right);
 
+void			*routine(void *arg);
+void			*check_meal(void *arg);
+void			init_philos(t_data *data);
 void			create_threads(t_data *data);
-void			taken_fork(t_philosopher *philo);
-void			sleeping(t_philosopher *philo);
 void			eating(t_philosopher *philo);
+void			sleeping(t_philosopher *philo);
 void			thinking(t_philosopher *philo);
+void			philo_full_eat(t_data *data);
+void			taken_fork(t_philosopher *philo);
+void			philo_time_die(t_data *data, int i);
+void			launch_threads(t_data *data, pthread_t *check_death);
 void			better_usleep(t_philosopher *philo, int eat_or_sleep);
 
-long long int	get_time_in_ms();
+long long int	get_time_in_ms(void);
 #endif
