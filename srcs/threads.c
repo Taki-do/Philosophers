@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:36:00 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/04/01 12:22:08 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/04/01 12:44:59 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	*routine(void *arg)
 {
-	long long		start;
 	t_philosopher	*philo;
 
 	philo = (t_philosopher *)arg;
@@ -30,40 +29,8 @@ void	*routine(void *arg)
 		pthread_mutex_lock(&philo->data->meal_check);
 		philo->time_meal = get_time_in_ms();
 		pthread_mutex_unlock(&philo->data->meal_check);
-		//partie a clear
-		pthread_mutex_lock(&philo->data->meal_check);
-		philo->nb_eat++;
-		if (philo->nb_eat == philo->data->nb_meals)
-		{
-			philo->data->philo_full_eat++;
-			pthread_mutex_unlock(&philo->data->meal_check);
-			pthread_mutex_unlock(philo->left_fork);
-			pthread_mutex_unlock(philo->right_fork);
+		if (philo_living(philo))
 			break ;
-		}
-		if (philo->data->nb_meals != -1 && philo->nb_eat >= philo->data->nb_meals)
-		{
-			pthread_mutex_unlock(&philo->data->meal_check);
-			pthread_mutex_unlock(philo->left_fork);
-			pthread_mutex_unlock(philo->right_fork);
-			break ;
-		}
-		pthread_mutex_unlock(&philo->data->meal_check);
-		
-		start = get_time_in_ms();
-		while (get_time_in_ms() - start < philo->data->time_to_eat)
-			usleep(500);
-		pthread_mutex_unlock(philo->left_fork);
-		pthread_mutex_unlock(philo->right_fork);
-		if (check_death(philo, 0, 0))
-			break ;
-		sleeping(philo);
-		start = get_time_in_ms();
-		while (get_time_in_ms() - start < philo->data->time_to_sleep)
-			usleep(500);
-		if (check_death(philo, 0, 0))
-			break ;
-		thinking(philo);
 	}
 	return (NULL);
 }

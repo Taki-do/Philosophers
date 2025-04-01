@@ -6,7 +6,7 @@
 /*   By: taomalbe <taomalbe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 14:30:24 by taomalbe          #+#    #+#             */
-/*   Updated: 2025/04/01 12:22:34 by taomalbe         ###   ########.fr       */
+/*   Updated: 2025/04/01 12:44:23 by taomalbe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,9 @@ typedef struct	s_data
 
 // utils.c
 int				ft_atoi(char *str);
+int				philo_living(t_philosopher *philo);
 int				even_odd(t_philosopher *philo, int num);
+int				check_philo_full(t_philosopher *philo);
 int				check_death(t_philosopher *philo, int left, int right);
 
 void			create_threads(t_data *data);
@@ -56,6 +58,7 @@ void			taken_fork(t_philosopher *philo);
 void			sleeping(t_philosopher *philo);
 void			eating(t_philosopher *philo);
 void			thinking(t_philosopher *philo);
+void			better_usleep(t_philosopher *philo, int eat_or_sleep);
 
 long long int	get_time_in_ms();
 #endif
